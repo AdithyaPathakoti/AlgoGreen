@@ -1,0 +1,37 @@
+At line:1 char:215
++ ...  $i=0; $batchSize=25; 
+$failures=@(); foreach ($f 
+in $files) { $i++; $ ...
++                            
+                             
+        ~
+Missing closing '}' in 
+statement block or type 
+definition.
+At line:1 char:1431
++ ... d .gitignore' } ; 
+Write-Host Committing 
+($i/$total): $f - $f) 
+2>$null ...
++                            
+                             
+        ~
+Unexpected token ')' in 
+expression or statement.
+At line:1 char:1651
++ ... Write-Host --- 
+Progress: committed $i of 
+$total files --- } } ; Write 
+...
++                            
+                             
+        ~
+Unexpected token '}' in 
+expression or statement.
+    + CategoryInfo           
+   : ParserError: (:) [], P  
+  arentContainsErrorRecord   
+ Exception
+    + FullyQualifiedErrorId  
+   : MissingEndCurlyBrace
+ 
