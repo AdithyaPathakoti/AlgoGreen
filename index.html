@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Caebon Credit</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Minimal synchronous Buffer shim for algosdk (runs before modules) -->
+    <script>
+      (function () {
+        if (window.Buffer) return;
+        try {
+          function fromString(str, enc) {
+            if (!enc || enc === 'utf8' || enc === 'utf-8') {
+              return new TextEncoder().encode(str);
+            }
+            if (enc === 'base64') {
+              var bin = atob(str);
+              var arr = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              return arr;
+            }
+            if (enc === 'hex') {
+              var len = str.length / 2;
+              var arr2 = new Uint8Array(len);
+              for (var j = 0; j < len; j++) arr2[j] = parseInt(str.substr(j * 2, 2), 16);
+              return arr2;
+            }
+            // fallback
+            return new TextEncoder().encode(str);
+          }
+
+          function BufferLike(arg) {
+            if (typeof arg === 'number') return new Uint8Array(arg);
+            if (typeof arg === 'string') return fromString(arg);
+            if (arg instanceof ArrayBuffer) return new Uint8Array(arg);
+            if (Array.isArray(arg) || ArrayBuffer.isView(arg)) return new Uint8Array(arg);
+            return new Uint8Array(0);
+          }
+
+          BufferLike.from = function (input, enc) {
+            if (typeof input === 'string') return BufferLike(fromString(input, enc));
+            if (input instanceof ArrayBuffer) return BufferLike(new Uint8Array(input));
+            if (Array.isArray(input)) return BufferLike(new Uint8Array(input));
+            if (ArrayBuffer.isView(input)) return BufferLike(new Uint8Array(input.buffer));
+            return BufferLike(input);
+          };
+
+          BufferLike.alloc = function (len) {
+            return new Uint8Array(len);
+          };
+
+          BufferLike.isBuffer = function (b) {
+            return b && (b instanceof Uint8Array);
+          };
+
+          BufferLike.prototype = Uint8Array.prototype;
+
+          BufferLike.toString = function (buf, enc) {
+            if (!enc || enc === 'utf8' || enc === 'utf-8') return new TextDecoder().decode(buf);
+            if (enc === 'base64') {
+              var s = '';
+              for (var i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]);
+              return btoa(s);
+            }
+            if (enc === 'hex') {
+              var out = '';
+              for (var j = 0; j < buf.length; j++) {
+                var h = buf[j].toString(16);
+                if (h.length === 1) h = '0' + h;
+                out += h;
+              }
+              return out;
+            }
+            return new TextDecoder().decode(buf);
+          };
+
+          // Expose global Buffer compatible API
+          window.Buffer = function (arg) {
+            return BufferLike(arg);
+          };
+          window.Buffer.from = BufferLike.from;
+          window.Buffer.alloc = BufferLike.alloc;
+          window.Buffer.isBuffer = BufferLike.isBuffer;
+          // for environments expecting Buffer.prototype.toString
+          window.Buffer.prototype = Uint8Array.prototype;
+          window.Buffer.prototype.toString = function (enc) {
+            return BufferLike.toString(this, enc);
+          };
+        } catch (e) {
+          // ignore
+        }
+      })();
+    </script>
+    <!-- Polyfill Buffer early for libraries like algosdk that expect Node Buffer -->
+    <script type="module">
+      try {
+        // Import buffer from node_modules (Vite will resolve this during dev)
+        import('/node_modules/buffer/index.js').then(mod => {
+          const Buffer = mod.Buffer || (mod.default && mod.default.Buffer) || mod.Buffer;
+          if (Buffer && !window.Buffer) {
+            window.Buffer = Buffer;
+          }
+        }).catch(() => {
+          // Fallback: no-op if buffer not available yet
+        });
+      } catch (e) {
+        // ignore
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/client/App.tsx"></script>
+  </body>
+</html>
