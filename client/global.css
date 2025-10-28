@@ -5,117 +5,90 @@
 @tailwind components;
 @tailwind utilities;
 
+/* New design tokens and utilities for the revamped UI */
 @layer base {
-  /**
-   * Tailwind CSS theme - Eco-themed Carbon Credit Tracker
-   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
-   * A different format will require also updating the theme in tailwind.config.ts.
-  */
   :root {
-    --background: 120 50% 98%;
-    --foreground: 120 15% 20%;
+    --background: 140 40% 98%;
+    --foreground: 142 18% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 120 15% 20%;
+    --card-foreground: 142 18% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 120 15% 20%;
-
-    --primary: 120 40% 40%;
+    --primary: 152 55% 42%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 120 35% 65%;
-    --secondary-foreground: 120 15% 20%;
+    --muted: 140 20% 92%;
+    --border: 140 20% 92%;
+    --input: 0 0% 100%;
 
-    --muted: 120 20% 88%;
-    --muted-foreground: 120 10% 45%;
-
-    --accent: 120 40% 40%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 120 20% 90%;
-    --input: 0 0% 97%;
-    --ring: 120 40% 40%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 120 15% 25%;
-
-    --sidebar-primary: 120 40% 40%;
-
-    --sidebar-primary-foreground: 0 0% 100%;
-
-    --sidebar-accent: 120 35% 88%;
-
-    --sidebar-accent-foreground: 120 15% 25%;
-
-    --sidebar-border: 120 20% 90%;
-
-    --sidebar-ring: 120 40% 40%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-border: 0 0% 96%;
   }
 
   .dark {
-    --background: 120 15% 12%;
-    --foreground: 120 20% 90%;
-
-    --card: 120 15% 18%;
-    --card-foreground: 120 20% 90%;
-
-    --popover: 120 15% 18%;
-    --popover-foreground: 120 20% 90%;
-
-    --primary: 120 50% 50%;
-    --primary-foreground: 120 15% 12%;
-
-    --secondary: 120 40% 60%;
-    --secondary-foreground: 120 15% 12%;
-
-    --muted: 120 15% 30%;
-    --muted-foreground: 120 15% 65%;
-
-    --accent: 120 50% 50%;
-    --accent-foreground: 120 15% 12%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 120 15% 25%;
-    --input: 120 15% 22%;
-    --ring: 120 50% 50%;
-
-    --sidebar-background: 120 15% 12%;
-    --sidebar-foreground: 120 20% 90%;
-    --sidebar-primary: 120 50% 50%;
-    --sidebar-primary-foreground: 120 15% 12%;
-    --sidebar-accent: 120 15% 28%;
-    --sidebar-accent-foreground: 120 20% 90%;
-    --sidebar-border: 120 15% 25%;
-    --sidebar-ring: 120 50% 50%;
+    --background: 140 20% 10%;
+    --foreground: 140 18% 90%;
+    --card: 140 18% 14%;
+    --card-foreground: 140 20% 92%;
+    --primary: 152 55% 52%;
+    --muted: 140 15% 22%;
+    --border: 140 15% 20%;
   }
-}
 
-@layer base {
   * {
-    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    height: 100%;
   }
 
   body {
-    @apply bg-background text-foreground;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    margin: 0;
   }
 
-  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
-    overflow-wrap: anywhere;
-    word-break: break-word;
+  /* Utility: card surface */
+  .card {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    padding: 1rem;
   }
 
-  pre,
-  code {
-    overflow-x: auto;
-    white-space: pre;
+  /* Hero background helper */
+  .bg-hero-pattern {
+    background-image: radial-gradient(circle at 10% 10%, rgba(72,187,120,0.06), transparent 10%), radial-gradient(circle at 90% 90%, rgba(34,197,94,0.04), transparent 12%);
   }
+
+  /* Small elevation */
+  .elev-1 { box-shadow: 0 1px 2px rgba(16,24,40,0.04); }
+
+  /* Responsive typography helpers */
+  h1, h2, h3 { line-height: 1.15; }
+
+  /* Make code blocks scroll horizontally */
+  pre, code { overflow-x: auto; }
 }
+
+/* Component-focused layer for some default components */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-3 py-2 rounded-md border bg-transparent text-slate-700;
+  }
+
+  .muted { color: hsl(var(--muted)); }
+}
+
+/* make sure default elements behave nicely */
+a { color: inherit; text-decoration: none; }
+
