@@ -27,10 +27,10 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
     location: "",
   });
 
-  const [errors, setErrors] = useState<Partial<MintFormData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof MintFormData, string>>>({});
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<MintFormData> = {};
+  const newErrors: Partial<Record<keyof MintFormData, string>> = {};
 
     if (!formData.organizationName.trim()) {
       newErrors.organizationName = "Organization name is required";
