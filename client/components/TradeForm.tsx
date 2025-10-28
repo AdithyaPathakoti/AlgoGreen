@@ -27,10 +27,10 @@ const TradeForm: React.FC<TradeFormProps> = ({
     message: "",
   });
 
-  const [errors, setErrors] = useState<Partial<TradeFormData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof TradeFormData, string>>>({});
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<TradeFormData> = {};
+  const newErrors: Partial<Record<keyof TradeFormData, string>> = {};
 
     if (formData.assetId <= 0) {
       newErrors.assetId = "Asset ID is required";
