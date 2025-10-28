@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper provided by App.tsx - pages render content only.
 import TradeForm, { TradeFormData } from "../components/TradeForm";
 import ConfirmationModal from "../components/ConfirmationModal";
 import TransactionStatus from "../components/TransactionStatus";
 import { useToast } from "../components/ToastNotification";
 import { transferNFT } from "../utils/algorand";
+import { useWallet } from "../context/WalletContext";
 
 type TransactionState = "pending" | "success" | "failed";
 
 const TradeCredits: React.FC = () => {
   const { addToast } = useToast();
+  const { address } = useWallet();
   const [formData, setFormData] = useState<TradeFormData | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isTransactionOpen, setIsTransactionOpen] = useState(false);
@@ -36,7 +38,16 @@ const TradeCredits: React.FC = () => {
     setTransactionState("pending");
 
     try {
+      if (!address) {
+        setIsSubmitting(false);
+        addToast("Connect your wallet to transfer credits", "error");
+        setTransactionState("failed");
+        setTransactionData({ txId: "", message: "Wallet not connected" });
+        return;
+      }
+
       const result = await transferNFT(
+        address,
         formData.assetId,
         formData.recipientAddress,
         formData.amount
@@ -79,8 +90,7 @@ const TradeCredits: React.FC = () => {
   };
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -146,7 +156,6 @@ const TradeCredits: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Confirmation Modal */}
       {formData && (
@@ -169,7 +178,7 @@ const TradeCredits: React.FC = () => {
         message={transactionData.message}
         onClose={handleTransactionClose}
       />
-    </LayoutWrapper>
+    </div>
   );
 };
 
