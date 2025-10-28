@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper provided by App.tsx
 import ThemeToggle from "../components/ThemeToggle";
 import NetworkSelector from "../components/NetworkSelector";
 import Button from "../components/Button";
@@ -19,8 +19,7 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
@@ -200,7 +199,6 @@ const Settings: React.FC = () => {
           </div>
         </div>
       </div>
-    </LayoutWrapper>
   );
 };
 
