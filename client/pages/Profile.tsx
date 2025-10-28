@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper provided by App.tsx
 import WalletInfo from "../components/WalletInfo";
 import TransactionHistory, { Transaction } from "../components/TransactionHistory";
 import Button from "../components/Button";
@@ -41,8 +41,7 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Profile</h1>
@@ -148,7 +147,6 @@ const Profile: React.FC = () => {
           />
         )}
       </div>
-    </LayoutWrapper>
   );
 };
 
