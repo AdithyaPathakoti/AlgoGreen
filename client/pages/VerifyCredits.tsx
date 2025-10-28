@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper provided by App.tsx
 import VerifyForm, { VerifyFormData } from "../components/VerifyForm";
 import VerificationResult from "../components/VerificationResult";
 import Loader from "../components/Loader";
@@ -44,8 +44,7 @@ const VerifyCredits: React.FC = () => {
   };
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -148,7 +147,6 @@ const VerifyCredits: React.FC = () => {
           </div>
         )}
       </div>
-    </LayoutWrapper>
   );
 };
 
