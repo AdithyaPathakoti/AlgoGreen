@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper provided by App.tsx
 import Button from "../components/Button";
 
 const About: React.FC = () => {
   return (
-    <LayoutWrapper>
-      <div className="space-y-12">
+    <div className="space-y-12">
         {/* Hero Section */}
         <div className="text-center space-y-4">
           <div className="text-6xl mb-4">🌍</div>
@@ -259,7 +258,6 @@ const About: React.FC = () => {
           </div>
         </div>
       </div>
-    </LayoutWrapper>
   );
 };
 
