@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper is provided by App.tsx; pages should render content only.
 import MintForm, { MintFormData } from "../components/MintForm";
 import FileUploader from "../components/FileUploader";
 import PreviewModal from "../components/PreviewModal";
 import TransactionStatus from "../components/TransactionStatus";
 import { useToast } from "../components/ToastNotification";
 import { mintNFT } from "../utils/algorand";
+import { useWallet } from "../context/WalletContext";
 import { uploadToIPFS, uploadMetadataToIPFS } from "../utils/ipfs";
 
 type TransactionState = "pending" | "success" | "failed";
 
 const MintCredits: React.FC = () => {
   const { addToast } = useToast();
+  const { address } = useWallet();
   const [certificateFile, setCertificateFile] = useState<File | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [formData, setFormData] = useState<MintFormData | null>(null);
@@ -40,6 +42,13 @@ const MintCredits: React.FC = () => {
     setIsTransactionModalOpen(true);
 
     try {
+      if (!address) {
+        setIsSubmitting(false);
+        addToast("Connect your wallet to mint credits", "error");
+        setTransactionState("failed");
+        setTransactionData({ txId: "", assetId: 0, message: "Wallet not connected" });
+        return;
+      }
       let certificateHash = "";
 
       // Upload certificate if provided
@@ -71,6 +80,7 @@ const MintCredits: React.FC = () => {
 
       // Mint NFT
       const result = await mintNFT(
+        address,
         formData.organizationName,
         formData.creditAmount,
         formData.description,
@@ -122,8 +132,7 @@ const MintCredits: React.FC = () => {
   };
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -153,7 +162,6 @@ const MintCredits: React.FC = () => {
               Certificates and metadata stored on decentralized IPFS
             </p>
           </div>
-        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Form */}
@@ -223,7 +231,7 @@ const MintCredits: React.FC = () => {
         message={transactionData.message}
         onClose={handleTransactionModalClose}
       />
-    </LayoutWrapper>
+    </div>
   );
 };
 
