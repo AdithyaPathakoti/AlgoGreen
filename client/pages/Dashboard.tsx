@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper is provided by App.tsx; pages should render content only.
 import StatCard from "../components/StatCard";
 import OverviewChart from "../components/OverviewChart";
 import ActivityFeed, { ActivityItem } from "../components/ActivityFeed";
@@ -51,11 +51,12 @@ const Dashboard: React.FC = () => {
               h.type === "mint"
                 ? "Minted Carbon Credits"
                 : h.type === "transfer"
-                  ? "Transferred Credits"
-                  : "Received Credits",
+                ? "Transferred Credits"
+                : "Received Credits",
             description: `${h.amount} MT CO₂ • Asset ID: ${h.assetId}`,
             date: h.date,
-            status: h.status,
+            // Map external status to ActivityItem expected union
+            status: (h.status === "confirmed" ? "success" : (h.status as any)) as any,
             amount: h.amount,
           }));
 
@@ -80,8 +81,7 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
@@ -233,7 +233,6 @@ const Dashboard: React.FC = () => {
         {/* Recent Activity */}
         <ActivityFeed activities={activities} isLoading={isLoading} />
       </div>
-    </LayoutWrapper>
   );
 };
 
