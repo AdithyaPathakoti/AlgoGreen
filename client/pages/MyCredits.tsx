@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import LayoutWrapper from "../components/LayoutWrapper";
+// LayoutWrapper is provided at the app level (App.tsx). Pages should not wrap themselves again.
 import CreditGrid from "../components/CreditGrid";
 import CreditDetailsModal from "../components/CreditDetailsModal";
 import Button from "../components/Button";
@@ -61,8 +61,7 @@ const MyCredits: React.FC = () => {
   };
 
   return (
-    <LayoutWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -137,7 +136,6 @@ const MyCredits: React.FC = () => {
             </div>
           </div>
         )}
-      </div>
 
       {/* Credit Details Modal */}
       {selectedCredit && (
@@ -149,7 +147,7 @@ const MyCredits: React.FC = () => {
           onVerify={() => handleVerify(selectedCredit)}
         />
       )}
-    </LayoutWrapper>
+    </div>
   );
 };
 
