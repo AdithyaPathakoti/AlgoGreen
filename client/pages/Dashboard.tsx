@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// LayoutWrapper is provided by App.tsx; pages should render content only.
 import StatCard from "../components/StatCard";
 import OverviewChart from "../components/OverviewChart";
 import ActivityFeed, { ActivityItem } from "../components/ActivityFeed";
@@ -43,20 +42,19 @@ const Dashboard: React.FC = () => {
         });
 
         const formattedActivities: ActivityItem[] = history
-          .slice(0, 5)
+          .slice(0, 6)
           .map((h) => ({
             id: h.id,
             type: h.type,
             title:
               h.type === "mint"
-                ? "Minted Carbon Credits"
+                ? "Minted"
                 : h.type === "transfer"
-                ? "Transferred Credits"
-                : "Received Credits",
-            description: `${h.amount} MT CO₂ • Asset ID: ${h.assetId}`,
+                ? "Transferred"
+                : "Received",
+            description: `${h.amount} MT • Asset ${h.assetId}`,
             date: h.date,
-            // Map external status to ActivityItem expected union
-            status: (h.status === "confirmed" ? "success" : (h.status as any)) as any,
+            status: h.status === "confirmed" ? "success" : (h.status as any),
             amount: h.amount,
           }));
 
@@ -72,167 +70,65 @@ const Dashboard: React.FC = () => {
   }, [isConnected, address]);
 
   const chartData = [
-    { label: "Credits Held", value: stats.creditsHeld, color: "bg-primary" },
-    {
-      label: "Credits Traded",
-      value: stats.creditsTraded,
-      color: "bg-secondary",
-    },
+    { label: "Held", value: stats.creditsHeld, color: "#10b981" },
+    { label: "Traded", value: stats.creditsTraded, color: "#60a5fa" },
   ];
 
   return (
     <div className="space-y-8">
-        {/* Page Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome back! Here's your carbon credit overview.
-          </p>
-        </div>
-
-        {/* Not Connected State */}
-        {!isConnected && (
-          <div className="p-6 rounded-lg bg-blue-50 border border-blue-200 text-blue-900">
-            <h3 className="font-semibold mb-2">🔗 Connect Your Wallet</h3>
-            <p className="text-sm mb-4">
-              Connect your Algorand wallet to view your carbon credits and
-              transaction history.
-            </p>
-            <Button variant="primary">Connect Wallet</Button>
-          </div>
-        )}
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard
-            icon="📊"
-            title="Total Credits Minted"
-            value={stats.totalCredits}
-            subtitle="Metric tons CO₂"
-            trend="up"
-            trendValue="+12%"
-          />
-          <StatCard
-            icon="🌍"
-            title="Total CO₂ Offset"
-            value={`${stats.totalOffset} MT`}
-            subtitle="Carbon eliminated"
-            trend="up"
-            trendValue="+12%"
-          />
-          <StatCard
-            icon="🎫"
-            title="Credits Held"
-            value={stats.creditsHeld}
-            subtitle="Available for trade"
-          />
-          <StatCard
-            icon="🔄"
-            title="Credits Traded"
-            value={stats.creditsTraded}
-            subtitle="Total transferred"
-            trend="neutral"
-            trendValue="0"
-          />
-        </div>
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Charts */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Overview Chart */}
-            <OverviewChart
-              title="Credit Distribution"
-              data={chartData}
-              type="pie"
-              height={300}
-            />
-
-            {/* Quick Actions */}
-            <div className="p-6 rounded-lg border border-border bg-card text-card-foreground">
-              <h3 className="text-lg font-semibold text-foreground mb-4">
-                Quick Actions
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Link to="/mint">
-                  <Button variant="primary" className="w-full">
-                    Mint Credits
-                  </Button>
-                </Link>
-                <Link to="/credits">
-                  <Button variant="secondary" className="w-full">
-                    View Credits
-                  </Button>
-                </Link>
-                <Link to="/trade">
-                  <Button variant="secondary" className="w-full">
-                    Trade Credits
-                  </Button>
-                </Link>
-                <Link to="/verify">
-                  <Button variant="secondary" className="w-full">
-                    Verify Credit
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div>
-            {/* Wallet Info */}
-            {isConnected && (
-              <div className="p-6 rounded-lg border border-border bg-card text-card-foreground mb-6">
-                <h3 className="font-semibold text-foreground mb-4">
-                  Wallet Info
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Balance</p>
-                    <p className="text-2xl font-bold text-primary">{balance}</p>
-                    <p className="text-xs text-muted-foreground">ALGO</p>
-                  </div>
-                  <Link to="/profile">
-                    <Button variant="ghost" className="w-full text-sm">
-                      View Full Profile →
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Stats Summary */}
-            <div className="p-6 rounded-lg border border-border bg-gradient-to-br from-primary/10 to-accent/10">
-              <h3 className="font-semibold text-foreground mb-4">Summary</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Total Minted
-                  </span>
-                  <span className="text-sm font-semibold text-foreground">
-                    {stats.totalCredits} MT
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Held</span>
-                  <span className="text-sm font-semibold text-foreground">
-                    {stats.creditsHeld} MT
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Traded</span>
-                  <span className="text-sm font-semibold text-foreground">
-                    {stats.creditsTraded} MT
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <ActivityFeed activities={activities} isLoading={isLoading} />
+      <div>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+        <p className="text-muted-foreground">Your carbon credit activity and quick actions.</p>
       </div>
+
+      {/* Top Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard title="Total Credits" value={stats.totalCredits} subtitle="MT CO₂" icon="�" />
+        <StatCard title="Held" value={stats.creditsHeld} subtitle="Available" icon="📥" />
+        <StatCard title="Traded" value={stats.creditsTraded} subtitle="Transferred" icon="🔁" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <OverviewChart title="Distribution" data={chartData} type="bar" height={260} />
+
+          <div className="p-6 rounded-lg border border-border bg-card">
+            <h3 className="text-lg font-semibold mb-3">Quick actions</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Link to="/mint">
+                <Button variant="primary" className="w-full">Mint Credits</Button>
+              </Link>
+              <Link to="/trade">
+                <Button variant="secondary" className="w-full">Trade Credits</Button>
+              </Link>
+              <Link to="/credits">
+                <Button variant="ghost" className="w-full">My Credits</Button>
+              </Link>
+              <Link to="/verify">
+                <Button variant="ghost" className="w-full">Verify</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div className="p-6 rounded-lg border border-border bg-card mb-6">
+            <h4 className="font-semibold">Wallet</h4>
+            <p className="mt-2 text-sm text-muted-foreground">{isConnected ? `${balance} ALGO` : "Not connected"}</p>
+            <div className="mt-4">
+              <Link to="/profile">
+                <Button variant="outline" className="w-full">Profile</Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-lg border border-border bg-card">
+            <h4 className="font-semibold mb-3">Recent activity</h4>
+            <ActivityFeed activities={activities} isLoading={isLoading} compact />
+          </div>
+        </aside>
+      </div>
+    </div>
   );
 };
 
