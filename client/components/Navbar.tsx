@@ -17,12 +17,13 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border" role="banner">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-emerald-500 to-green-600 flex items-center justify-center text-white font-bold">AG</div>
+              <span className="sr-only">AlgoGreen home</span>
               <span className="font-bold text-lg hidden sm:inline">AlgoGreen</span>
             </Link>
 
@@ -32,6 +33,7 @@ const Navbar: React.FC = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search projects, credits, txns..."
+                aria-label="Search projects, credits and transactions"
                 className="bg-transparent outline-none text-sm w-72 focus:ring-0"
               />
             </div>
@@ -41,12 +43,13 @@ const Navbar: React.FC = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search"
-                className="bg-muted/50 px-2 py-1 rounded text-sm w-36"
+                aria-label="Search"
+                className="bg-muted/50 px-2 py-1 rounded text-sm w-36 focus:ring-1 focus:ring-primary"
               />
             </div>
           </div>
 
-          <nav className="flex items-center gap-3">
+          <nav className="flex items-center gap-3" role="navigation" aria-label="Primary navigation">
             <div className="hidden sm:flex items-center gap-2">
               <Button onClick={toggleTheme} variant="ghost" aria-label="Toggle theme">{isDark ? "🌙" : "☀️"}</Button>
               <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">Dashboard</Link>
@@ -64,7 +67,8 @@ const Navbar: React.FC = () => {
               className="p-2 rounded-md md:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-controls="mobile-menu"
               aria-expanded={menuOpen}
-              aria-label="Open menu"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              title={menuOpen ? "Close menu" : "Open menu"}
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
