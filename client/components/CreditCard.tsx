@@ -18,74 +18,70 @@ interface CreditCardProps {
   onVerify?: () => void;
 }
 
-const CreditCard: React.FC<CreditCardProps> = ({
-  credit,
-  onClick,
-  onTrade,
-  onVerify,
-}) => {
+const CreditCard: React.FC<CreditCardProps> = ({ credit, onClick, onTrade, onVerify }) => {
   return (
-    <div
+    <article
       onClick={onClick}
-      className={`rounded-lg border border-border bg-card text-card-foreground overflow-hidden hover:shadow-lg transition-all duration-200 ${
-        onClick ? "cursor-pointer hover:border-primary/50" : ""
-      }`}
+      className={`rounded-xl border border-border bg-white shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-200 ${onClick ? "cursor-pointer" : ""}`}
     >
-      {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-primary/10 to-accent/10 border-b border-border">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-foreground text-sm">{credit.name}</h3>
-          {credit.verified && (
-            <span className="px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
-              ✓ Verified
-            </span>
-          )}
+      <header className="p-4 bg-gradient-to-r from-emerald-50 to-sky-50 border-b">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-sm text-foreground">{credit.name}</h3>
+            <p className="text-xs text-muted-foreground">{credit.organization}</p>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-muted-foreground">{credit.issueDate}</div>
+            {credit.verified ? (
+              <div className="mt-1 text-xs text-green-600 font-medium">✓ Verified</div>
+            ) : (
+              <div className="mt-1 text-xs text-muted-foreground">Unverified</div>
+            )}
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground">{credit.organization}</p>
-      </div>
+      </header>
 
-      {/* Content */}
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-4">
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Carbon Credits</p>
-          <p className="text-2xl font-bold text-primary">{credit.amount} MT</p>
+          <span className="text-xs text-muted-foreground">Carbon Credits</span>
+          <div className="mt-1 text-2xl font-bold text-foreground">{credit.amount} MT</div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div>
-            <p className="text-xs text-muted-foreground">Asset ID</p>
-            <p className="font-mono text-xs text-foreground">
-              {credit.assetId}
-            </p>
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="bg-muted/10 p-3 rounded">
+            <div className="text-xs text-muted-foreground">Asset ID</div>
+            <div className="font-mono mt-1 text-sm">{credit.assetId}</div>
           </div>
-          <div>
-            <p className="text-xs text-muted-foreground">Issued</p>
-            <p className="text-xs text-foreground">{credit.issueDate}</p>
+          <div className="bg-muted/10 p-3 rounded">
+            <div className="text-xs text-muted-foreground">Issued</div>
+            <div className="mt-1 text-sm">{credit.issueDate}</div>
           </div>
         </div>
 
-        {credit.metadata && Object.keys(credit.metadata).length > 0 && (
-          <div className="p-2 rounded bg-muted/50 text-xs space-y-1">
-            {Object.entries(credit.metadata).slice(0, 2).map(([key, value]) => (
-              <div key={key} className="flex justify-between">
-                <span className="text-muted-foreground capitalize">{key}:</span>
-                <span className="text-foreground font-medium">{value}</span>
-              </div>
-            ))}
+        {credit.metadata && (
+          <div className="text-sm bg-muted/5 p-3 rounded">
+            <div className="text-xs text-muted-foreground mb-2">Metadata</div>
+            <div className="grid grid-cols-1 gap-1 text-xs">
+              {Object.entries(credit.metadata).map(([k, v]) => (
+                <div key={k} className="flex justify-between">
+                  <span className="text-muted-foreground capitalize">{k}</span>
+                  <span className="text-foreground ml-2">{v}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
-      {/* Actions */}
       {(onTrade || onVerify) && (
-        <div className="px-4 py-3 border-t border-border flex gap-2">
+        <footer className="px-4 py-3 border-t bg-muted/5 flex gap-2">
           {onTrade && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onTrade();
               }}
-              className="flex-1 px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 rounded hover:bg-primary/20 transition-colors"
+              className="flex-1 px-4 py-2 text-sm font-medium bg-primary text-white rounded-md hover:bg-primary/90"
             >
               Trade
             </button>
@@ -96,14 +92,14 @@ const CreditCard: React.FC<CreditCardProps> = ({
                 e.stopPropagation();
                 onVerify();
               }}
-              className="flex-1 px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 rounded hover:bg-primary/20 transition-colors"
+              className="flex-1 px-4 py-2 text-sm font-medium border border-border rounded-md bg-white hover:bg-muted/10"
             >
               Verify
             </button>
           )}
-        </div>
+        </footer>
       )}
-    </div>
+    </article>
   );
 };
 
