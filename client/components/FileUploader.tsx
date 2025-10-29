@@ -30,6 +30,15 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     onFileSelect(file);
   };
 
+  // Show a simple preview for image files
+  const filePreview = React.useMemo(() => {
+    if (!fileInputRef.current || !fileInputRef.current.files) return null;
+    const f = fileInputRef.current.files[0];
+    if (!f) return null;
+    if (f.type.startsWith("image/")) return URL.createObjectURL(f);
+    return null;
+  }, [fileInputRef.current?.files]);
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
@@ -89,6 +98,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         <p className="text-xs text-muted-foreground mt-1">
           {accept} • Max {maxSize / 1024 / 1024}MB
         </p>
+
+        {/* Inline preview for selected images */}
+        {filePreview && (
+          <div className="mt-3">
+            <img src={filePreview} alt="preview" className="mx-auto max-h-32 rounded" />
+            <p className="text-xs text-muted-foreground mt-2">Preview of the selected file</p>
+          </div>
+        )}
       </div>
       <input
         ref={fileInputRef}

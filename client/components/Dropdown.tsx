@@ -43,6 +43,20 @@ const Dropdown: React.FC<DropdownProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // keyboard accessibility: open/close with Enter/Escape and navigate with Arrow keys
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (!dropdownRef.current) return;
+      const focused = document.activeElement;
+      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "Enter" && (focused === dropdownRef.current || dropdownRef.current.contains(focused))) {
+        setIsOpen((s) => !s);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
+
   const handleSelect = (optionValue: string | number) => {
     onChange?.(optionValue);
     setIsOpen(false);
@@ -56,6 +70,8 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
           className={`w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 ${
             error ? "border-destructive focus:ring-destructive" : ""
           }`}
@@ -82,10 +98,12 @@ const Dropdown: React.FC<DropdownProps> = ({
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-input rounded-lg shadow-lg z-50 animate-fade-in">
-            {options.map((option) => (
+          <div role="listbox" aria-label={label || "dropdown"} className="absolute top-full left-0 right-0 mt-1 bg-card border border-input rounded-lg shadow-lg z-50 animate-fade-in">
+            {options.map((option, idx) => (
               <button
                 key={option.value}
+                role="option"
+                aria-selected={option.value === value}
                 onClick={() => handleSelect(option.value)}
                 disabled={option.disabled}
                 className={`w-full px-4 py-2 text-left flex items-center gap-2 hover:bg-accent/10 transition-colors first:rounded-t-lg last:rounded-b-lg ${

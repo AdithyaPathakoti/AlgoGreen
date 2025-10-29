@@ -26,7 +26,8 @@ const InputField = React.forwardRef<any, InputFieldProps>(
     },
     ref
   ) => {
-    const baseClasses = `w-full px-4 py-2 ${icon ? "pl-10" : ""} border border-input rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 ${error ? "border-destructive focus:ring-destructive" : ""} disabled:opacity-50 disabled:cursor-not-allowed ${className}`;
+  const baseClasses = `w-full px-4 py-2 ${icon ? "pl-10" : ""} border border-input rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 ${error ? "border-destructive focus:ring-destructive" : ""} disabled:opacity-50 disabled:cursor-not-allowed ${className}`;
+  const textareaClasses = baseClasses + " resize-vertical min-h-[96px]";
 
     return (
       <div className="flex flex-col gap-1.5">
@@ -47,13 +48,15 @@ const InputField = React.forwardRef<any, InputFieldProps>(
             <textarea
               ref={ref}
               rows={rows}
-              className={baseClasses}
+              className={textareaClasses}
+              aria-invalid={!!error}
               {...(props as any)}
             />
           ) : (
             <input
               ref={ref}
               className={baseClasses}
+              aria-invalid={!!error}
               {...(props as any)}
             />
           )}
@@ -64,7 +67,7 @@ const InputField = React.forwardRef<any, InputFieldProps>(
             </div>
           )}
         </div>
-        {error && <p className="text-xs text-destructive">{error}</p>}
+        {error && <p className="text-xs text-destructive" role="alert">{error}</p>}
         {helperText && !error && (
           <p className="text-xs text-muted-foreground">{helperText}</p>
         )}

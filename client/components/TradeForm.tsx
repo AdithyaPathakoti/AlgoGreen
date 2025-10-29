@@ -62,6 +62,17 @@ const TradeForm: React.FC<TradeFormProps> = ({
     }
   };
 
+  const handleReset = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setFormData({
+      assetId: 0,
+      recipientAddress: "",
+      amount: 0,
+      message: "",
+    });
+    setErrors({});
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -84,6 +95,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
         error={errors.assetId}
         placeholder="Enter asset ID"
         required
+        helperText="Numeric asset identifier for the credit NFT"
       />
 
       <InputField
@@ -98,6 +110,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
         max={availableAmount}
         helperText={`Available: ${availableAmount} credits`}
         required
+        trailingIcon={<span className="text-sm text-muted-foreground">MT</span>}
       />
 
       <InputField
@@ -109,32 +122,30 @@ const TradeForm: React.FC<TradeFormProps> = ({
         placeholder="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HVY"
         helperText="58-character Algorand address"
         required
+        className="font-mono"
       />
 
-      <div>
-        <label className="text-sm font-medium text-foreground mb-1.5 block">
-          Message (Optional)
-        </label>
-        <textarea
-          name="message"
-          value={formData.message || ""}
-          onChange={handleInputChange}
-          placeholder="Add a message for the recipient..."
-          rows={3}
-          className="w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-        />
-      </div>
+      <InputField
+        label="Message (Optional)"
+        name="message"
+        value={formData.message || ""}
+        onChange={handleInputChange}
+        placeholder="Add a message for the recipient..."
+        multiline
+        rows={3}
+      />
 
-      <div className="flex gap-3 pt-4">
+      <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <Button
           type="submit"
           variant="primary"
           isLoading={isLoading}
           disabled={isLoading}
+          className="w-full sm:w-auto"
         >
           Transfer Credits
         </Button>
-        <Button type="reset" variant="ghost">
+        <Button type="reset" variant="ghost" className="w-full sm:w-auto" onClick={handleReset}>
           Clear Form
         </Button>
       </div>

@@ -28,46 +28,31 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title="Review NFT Details" size="md">
       <div className="space-y-4">
         <div className="p-4 rounded-lg bg-muted/50 border border-border">
-          <h3 className="font-semibold text-foreground mb-3">Carbon Credit NFT</h3>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-foreground mb-1">Carbon Credit NFT</h3>
+              <p className="text-xs text-muted-foreground">Review the metadata that will be embedded in the NFT.</p>
+            </div>
+            <div className="text-right text-sm text-muted-foreground">
+              <div>{data.issueDate}</div>
+              <div className="mt-1">{data.certificateType}</div>
+            </div>
+          </div>
 
-          <div className="space-y-3">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <p className="text-sm text-muted-foreground">Organization</p>
-              <p className="text-base font-medium text-foreground">
-                {data.organizationName}
-              </p>
+              <p className="text-base font-medium text-foreground">{data.organizationName}</p>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Amount</p>
-                <p className="text-base font-medium text-foreground">
-                  {data.creditAmount} MT CO₂
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Certificate</p>
-                <p className="text-base font-medium text-foreground">
-                  {data.certificateType}
-                </p>
-              </div>
-            </div>
-
             <div>
+              <p className="text-sm text-muted-foreground">Amount</p>
+              <p className="text-base font-medium text-foreground">{data.creditAmount} MT CO₂</p>
+            </div>
+            <div className="sm:col-span-2">
               <p className="text-sm text-muted-foreground">Location</p>
-              <p className="text-base font-medium text-foreground">
-                {data.location}
-              </p>
+              <p className="text-base font-medium text-foreground">{data.location}</p>
             </div>
-
-            <div>
-              <p className="text-sm text-muted-foreground">Issue Date</p>
-              <p className="text-base font-medium text-foreground">
-                {data.issueDate}
-              </p>
-            </div>
-
-            <div>
+            <div className="sm:col-span-2">
               <p className="text-sm text-muted-foreground">Description</p>
               <p className="text-sm text-foreground mt-1">{data.description}</p>
             </div>
@@ -76,14 +61,13 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
 
         <div className="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-3 text-sm">
           <p className="font-medium mb-1">⚠️ Important</p>
-          <p>
-            Once minted, this NFT will be published to the Algorand blockchain
-            and cannot be modified.
+          <p className="text-sm">
+            Once minted, this NFT will be published to the Algorand blockchain and cannot be modified.
           </p>
         </div>
       </div>
 
-      <div className="flex gap-3 pt-6 border-t border-border">
+      <div className="flex gap-3 pt-6 border-t border-border justify-end">
         <Button onClick={onClose} variant="ghost" disabled={isLoading}>
           Cancel
         </Button>
