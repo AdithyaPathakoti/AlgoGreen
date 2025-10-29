@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Button from "../components/Button";
 
 export default function Index() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+  <main role="main" className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Large hero with prominent CTA and feature highlights */}
       <section className="max-w-7xl mx-auto px-6 pt-16 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -15,9 +16,20 @@ export default function Index() {
               Mint, verify and trade carbon credit NFTs with low fees and instant finality. Connect your wallet to get started or browse projects and marketplaces.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/dashboard" className="inline-flex items-center px-5 py-3 bg-primary text-white rounded-md shadow hover:bg-primary/90">Open Dashboard</Link>
-              <Link to="/mint" className="inline-flex items-center px-5 py-3 border border-border rounded-md text-foreground hover:bg-muted">Mint Credits</Link>
+            <div className="mt-6 flex items-center gap-3">
+              <Link to="/dashboard">
+                <Button variant="primary">Open Dashboard</Button>
+              </Link>
+              <Link to="/mint">
+                <Button variant="outline">Mint Credits</Button>
+              </Link>
+              <Link to="/projects" className="ml-2 text-sm text-muted-foreground hover:underline">Browse Projects</Link>
+            </div>
+
+            <div className="mt-6 flex items-center gap-3">
+              <label htmlFor="project-search" className="sr-only">Search projects</label>
+              <input id="project-search" type="search" placeholder="Search projects or assets (e.g. SolarFarm)" className="w-full sm:w-80 px-3 py-2 border rounded-md" aria-label="Search projects" />
+              <Button variant="ghost" size="sm">Search</Button>
             </div>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -34,9 +46,19 @@ export default function Index() {
                 <p className="text-sm text-muted-foreground mt-1">Connect wallets, indexers and audit tools.</p>
               </div>
             </div>
+
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold">Trusted by projects</h3>
+              <div className="mt-4 flex items-center gap-4 overflow-x-auto py-2">
+                <div className="flex-shrink-0 p-3 bg-card rounded">SolarFarm</div>
+                <div className="flex-shrink-0 p-3 bg-card rounded">BlueForest</div>
+                <div className="flex-shrink-0 p-3 bg-card rounded">CoastalRestoration</div>
+                <div className="flex-shrink-0 p-3 bg-card rounded">UrbanCanopy</div>
+              </div>
+            </div>
           </div>
 
-          <div className="rounded-xl bg-gradient-to-br from-white to-slate-50 p-6 shadow-lg">
+          <aside className="rounded-xl bg-gradient-to-br from-white to-slate-50 p-6 shadow-lg">
             <div className="text-sm text-muted-foreground">Live snapshot</div>
             <div className="mt-4 grid grid-cols-2 gap-4">
               <div className="p-4 bg-card rounded">
@@ -57,7 +79,13 @@ export default function Index() {
                 <li>✅ Verified metadata published for Asset 1001</li>
               </ul>
             </div>
-          </div>
+
+            <div className="mt-4 text-center">
+              <Link to="/pricing">
+                <Button variant="ghost">See pricing</Button>
+              </Link>
+            </div>
+          </aside>
         </div>
       </section>
 
