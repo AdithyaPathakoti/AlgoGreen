@@ -35,6 +35,9 @@ const buttonVariants = cva(
   }
 );
 
+// Note: this CVA-based button supports the same variant names used by the
+// project's `client/components/Button.tsx` (including `outline`). Keep the
+// variant keys aligned so either implementation can be used interchangeably.
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {

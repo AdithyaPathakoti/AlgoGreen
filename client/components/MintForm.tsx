@@ -109,6 +109,7 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
         min="1"
         max="1000000"
         required
+        trailingIcon={<span className="text-sm text-muted-foreground">MT</span>}
       />
 
       <div>
@@ -152,25 +153,17 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
         required
       />
 
-      <div className="form-group">
-        <label className="text-sm font-medium text-foreground mb-1.5 block">
-          Description
-        </label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          placeholder="Describe the carbon credit project details..."
-          rows={4}
-          className={`w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 ${
-            errors.description ? "border-destructive focus:ring-destructive" : ""
-          } disabled:opacity-50 disabled:cursor-not-allowed`}
-          required
-        />
-        {errors.description && (
-          <p className="text-xs text-destructive mt-1">{errors.description}</p>
-        )}
-      </div>
+      <InputField
+        label="Description"
+        name="description"
+        value={formData.description}
+        onChange={handleInputChange}
+        placeholder="Describe the carbon credit project details..."
+        multiline
+        rows={4}
+        error={errors.description}
+        required
+      />
 
       {/* Live inline preview inside the form */}
       {(formData.organizationName || formData.creditAmount > 0) && (

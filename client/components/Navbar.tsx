@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/60 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
@@ -32,7 +32,16 @@ const Navbar: React.FC = () => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search projects, credits, txns..."
-                className="bg-transparent outline-none text-sm w-72"
+                className="bg-transparent outline-none text-sm w-72 focus:ring-0"
+              />
+            </div>
+            {/* Mobile search - visible on small screens */}
+            <div className="md:hidden ml-2">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search"
+                className="bg-muted/50 px-2 py-1 rounded text-sm w-36"
               />
             </div>
           </div>
@@ -45,26 +54,32 @@ const Navbar: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button onClick={handleWalletClick} variant={isConnected ? "secondary" : "primary"} size="sm">
+              <Button onClick={handleWalletClick} variant={isConnected ? "secondary" : "primary"} size="sm" className="whitespace-nowrap">
                 {isConnected ? formatAddress(address || "") : "Connect Wallet"}
               </Button>
             </div>
 
-            <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 rounded-md md:hidden">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 rounded-md md:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-controls="mobile-menu"
+              aria-expanded={menuOpen}
+              aria-label="Open menu"
+            >
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
           </nav>
         </div>
 
         {menuOpen && (
-          <div className="md:hidden mt-2 pb-4 border-t border-border">
+          <div id="mobile-menu" className="md:hidden mt-2 pb-4 border-t border-border">
             <div className="flex flex-col gap-2 px-2">
-              <Link to="/dashboard" className="px-3 py-2 rounded">Dashboard</Link>
-              <Link to="/mint" className="px-3 py-2 rounded">Mint</Link>
-              <Link to="/credits" className="px-3 py-2 rounded">Credits</Link>
-              <Link to="/trade" className="px-3 py-2 rounded">Trade</Link>
-              <Link to="/verify" className="px-3 py-2 rounded">Verify</Link>
-              <Button onClick={handleWalletClick} variant={isConnected ? "secondary" : "primary"} size="sm" className="w-full">{isConnected ? formatAddress(address || "") : "Connect Wallet"}</Button>
+              <Link to="/dashboard" className="px-3 py-2 rounded hover:bg-muted/10">Dashboard</Link>
+              <Link to="/mint" className="px-3 py-2 rounded hover:bg-muted/10">Mint</Link>
+              <Link to="/credits" className="px-3 py-2 rounded hover:bg-muted/10">Credits</Link>
+              <Link to="/trade" className="px-3 py-2 rounded hover:bg-muted/10">Trade</Link>
+              <Link to="/verify" className="px-3 py-2 rounded hover:bg-muted/10">Verify</Link>
+              <Button onClick={handleWalletClick} variant={isConnected ? "secondary" : "primary"} size="sm" className="w-full mt-2">{isConnected ? formatAddress(address || "") : "Connect Wallet"}</Button>
             </div>
           </div>
         )}

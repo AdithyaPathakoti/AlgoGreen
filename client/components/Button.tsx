@@ -1,6 +1,6 @@
 import React from "react";
 
-type ButtonVariant = "primary" | "secondary" | "destructive" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "destructive" | "ghost" | "outline";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -35,6 +35,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus:ring-destructive",
       ghost:
         "text-foreground hover:bg-accent/10 border border-border focus:ring-primary",
+      outline:
+        "bg-background border border-input text-foreground hover:bg-accent/10 focus:ring-primary",
     };
 
     const sizes: Record<ButtonSize, string> = {
@@ -47,7 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+        className={[baseStyles, variants[variant], sizes[size], className].filter(Boolean).join(" ")}
         {...props}
       >
         {isLoading && (

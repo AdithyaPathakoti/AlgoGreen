@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./Button";
 
 export interface CreditCardData {
   assetId: number;
@@ -23,11 +24,13 @@ const CreditCard: React.FC<CreditCardProps> = ({ credit, onClick, onTrade, onVer
     <article
       onClick={onClick}
       className={`rounded-xl border border-border bg-white shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-200 ${onClick ? "cursor-pointer" : ""}`}
+      role="article"
+      aria-labelledby={`credit-${credit.assetId}-title`}
     >
       <header className="p-4 bg-gradient-to-r from-emerald-50 to-sky-50 border-b">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-sm text-foreground">{credit.name}</h3>
+            <h3 id={`credit-${credit.assetId}-title`} className="font-semibold text-sm text-foreground">{credit.name}</h3>
             <p className="text-xs text-muted-foreground">{credit.organization}</p>
           </div>
           <div className="text-right">
@@ -76,26 +79,30 @@ const CreditCard: React.FC<CreditCardProps> = ({ credit, onClick, onTrade, onVer
       {(onTrade || onVerify) && (
         <footer className="px-4 py-3 border-t bg-muted/5 flex gap-2">
           {onTrade && (
-            <button
+            <Button
               onClick={(e) => {
                 e.stopPropagation();
                 onTrade();
               }}
-              className="flex-1 px-4 py-2 text-sm font-medium bg-primary text-white rounded-md hover:bg-primary/90"
+              className="flex-1"
+              variant="primary"
+              aria-label="Trade credit"
             >
               Trade
-            </button>
+            </Button>
           )}
           {onVerify && (
-            <button
+            <Button
               onClick={(e) => {
                 e.stopPropagation();
                 onVerify();
               }}
-              className="flex-1 px-4 py-2 text-sm font-medium border border-border rounded-md bg-white hover:bg-muted/10"
+              className="flex-1"
+              variant="outline"
+              aria-label="Verify credit"
             >
               Verify
-            </button>
+            </Button>
           )}
         </footer>
       )}
