@@ -163,7 +163,9 @@ const MintCredits: React.FC = () => {
             </p>
           </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Main Form */}
           <div className="lg:col-span-2">
             <div className="p-6 rounded-lg border border-border bg-card text-card-foreground">
@@ -196,6 +198,35 @@ const MintCredits: React.FC = () => {
               )}
             </div>
 
+            {/* Live Preview Summary */}
+            {formData && (
+              <div className="p-4 rounded-lg border border-border bg-white text-foreground">
+                <h4 className="font-semibold mb-2">Preview Summary</h4>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  <p>
+                    <span className="font-medium">Org:</span> {formData.organizationName || "—"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Amount:</span> {formData.creditAmount} MT
+                  </p>
+                  <p>
+                    <span className="font-medium">Type:</span> {formData.certificateType}
+                  </p>
+                  <p>
+                    <span className="font-medium">Issue Date:</span> {formData.issueDate}
+                  </p>
+                </div>
+                <div className="mt-3">
+                  <button
+                    onClick={() => setIsPreviewOpen(true)}
+                    className="text-sm text-primary underline"
+                  >
+                    Open full preview
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Guidelines */}
             <div className="p-6 rounded-lg border border-border bg-muted/50">
               <h3 className="font-semibold text-foreground mb-3">Guidelines</h3>
@@ -209,7 +240,6 @@ const MintCredits: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Preview Modal */}
       {formData && (

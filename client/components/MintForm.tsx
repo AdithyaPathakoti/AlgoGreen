@@ -63,6 +63,19 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
     }
   };
 
+  const handleReset = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setFormData({
+      organizationName: "",
+      creditAmount: 0,
+      description: "",
+      certificateType: "Gold Standard",
+      issueDate: new Date().toISOString().split("T")[0],
+      location: "",
+    });
+    setErrors({});
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -74,7 +87,7 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+  <form onSubmit={handleSubmit} onReset={handleReset} className="space-y-6">
       <InputField
         label="Organization Name"
         name="organizationName"
@@ -117,6 +130,7 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
             }))
           }
         />
+        <p className="text-xs text-muted-foreground mt-2">Choose the certification standard that best matches your project. This appears on the NFT metadata.</p>
       </div>
 
       <InputField
@@ -158,16 +172,33 @@ const MintForm: React.FC<MintFormProps> = ({ onSubmit, isLoading = false }) => {
         )}
       </div>
 
-      <div className="flex gap-3 pt-4">
+      {/* Live inline preview inside the form */}
+      {(formData.organizationName || formData.creditAmount > 0) && (
+        <div className="p-4 rounded-md bg-surface border border-border text-sm">
+          <h4 className="font-medium mb-2">Draft Preview</h4>
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium">Org:</span> {formData.organizationName || "—"}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium">Amount:</span> {formData.creditAmount} MT
+          </p>
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium">Type:</span> {formData.certificateType}
+          </p>
+        </div>
+      )}
+
+      <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <Button
           type="submit"
           variant="primary"
           isLoading={isLoading}
           disabled={isLoading}
+          className="w-full sm:w-auto"
         >
           Mint Carbon Credit
         </Button>
-        <Button type="reset" variant="ghost">
+        <Button type="reset" variant="ghost" className="w-full sm:w-auto">
           Clear Form
         </Button>
       </div>
