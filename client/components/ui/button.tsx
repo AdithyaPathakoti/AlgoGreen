@@ -30,7 +30,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "default",
       size: "default",
-      rounded: "false",
+      rounded: false,
     },
   }
 );
@@ -46,7 +46,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, rounded, className }))}
+        className={cn(buttonVariants({ variant, size, rounded }), className)}
         ref={ref}
         {...props}
       />
