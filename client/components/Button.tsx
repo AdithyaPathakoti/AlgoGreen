@@ -45,12 +45,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "px-6 py-3 text-lg",
     };
 
+    // ensure we explicitly set a button type to avoid accidental form submits
+    const { type, ...rest } = props as any;
     return (
       <button
         ref={ref}
+        type={type ?? "button"}
         disabled={disabled || isLoading}
+        aria-busy={isLoading}
+        aria-disabled={disabled || isLoading}
         className={[baseStyles, variants[variant], sizes[size], className].filter(Boolean).join(" ")}
-        {...props}
+        {...rest}
       >
         {isLoading && (
           <svg
@@ -58,6 +63,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            role="status"
+            aria-label="loading"
           >
             <circle
               className="opacity-25"
