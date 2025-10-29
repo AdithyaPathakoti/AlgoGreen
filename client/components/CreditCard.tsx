@@ -26,6 +26,18 @@ const CreditCard: React.FC<CreditCardProps> = ({ credit, onClick, onTrade, onVer
       className={`rounded-xl border border-border bg-white shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-200 ${onClick ? "cursor-pointer" : ""}`}
       role="article"
       aria-labelledby={`credit-${credit.assetId}-title`}
+      aria-label={`Credit ${credit.name}`}
+      {...(onClick
+        ? {
+            tabIndex: 0,
+            onKeyDown: (e: React.KeyboardEvent) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick();
+              }
+            },
+          }
+        : {})}
     >
       <header className="p-4 bg-gradient-to-r from-emerald-50 to-sky-50 border-b">
         <div className="flex items-center justify-between">
