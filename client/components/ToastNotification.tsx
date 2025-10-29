@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 
 type ToastType = "success" | "error" | "info" | "warning";
 
@@ -36,11 +36,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
     const id = `toast-${Date.now()}-${Math.random()}`;
     const toast: Toast = { id, message, type, duration };
     setToasts((prev) => [...prev, toast]);
-
-    if (duration > 0) {
-      setTimeout(() => removeToast(id), duration);
-    }
-
     return id;
   };
 
@@ -90,13 +85,17 @@ interface ToastItemProps {
 
 const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
   const [isExiting, setIsExiting] = useState(false);
+  const timerRef = useRef<number | null>(null);
+  const startRef = useRef<number | null>(null);
+  const remainingRef = useRef<number>(toast.duration ?? 5000);
+  const isPaused = useRef(false);
 
   const typeStyles = {
     success: "bg-green-50 border-green-200 text-green-900",
     error: "bg-red-50 border-red-200 text-red-900",
     info: "bg-blue-50 border-blue-200 text-blue-900",
     warning: "bg-yellow-50 border-yellow-200 text-yellow-900",
-  };
+  } as const;
 
   const icons = {
     success: (
@@ -135,26 +134,86 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
         />
       </svg>
     ),
+  } as const;
+
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      window.clearTimeout(timerRef.current as number);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const startTimer = useCallback((ms?: number) => {
+    const timeout = typeof ms === "number" ? ms : remainingRef.current;
+    if (timeout <= 0) return;
+    startRef.current = Date.now();
+    timerRef.current = window.setTimeout(() => {
+      setIsExiting(true);
+      setTimeout(onRemove, 300);
+    }, timeout);
+  }, [onRemove]);
+
+  useEffect(() => {
+    // Start countdown only if duration > 0
+    if ((toast.duration ?? 5000) > 0) {
+      remainingRef.current = toast.duration ?? 5000;
+      startTimer();
+    }
+
+    return () => {
+      clearTimer();
+    };
+  }, [toast.duration, clearTimer, startTimer]);
+
+  const pause = () => {
+    if (isPaused.current) return;
+    isPaused.current = true;
+    if (startRef.current) {
+      const elapsed = Date.now() - startRef.current;
+      remainingRef.current = Math.max(0, remainingRef.current - elapsed);
+    }
+    clearTimer();
+  };
+
+  const resume = () => {
+    if (!isPaused.current) return;
+    isPaused.current = false;
+    startTimer(remainingRef.current);
   };
 
   const handleClose = () => {
+    clearTimer();
     setIsExiting(true);
     setTimeout(onRemove, 300);
   };
 
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") handleClose();
+  };
+
   return (
     <div
+      role="status"
+      aria-live="polite"
+      tabIndex={0}
+      onMouseEnter={pause}
+      onMouseLeave={resume}
+      onFocus={pause}
+      onBlur={resume}
+      onKeyDown={onKeyDown}
       className={`border rounded-lg p-4 flex items-start gap-3 shadow-lg transition-all duration-300 ${
         typeStyles[toast.type]
       } ${isExiting ? "opacity-0 translate-x-full" : "opacity-100"}`}
     >
-      <div className="flex-shrink-0">{icons[toast.type]}</div>
+      <div className="flex-shrink-0" aria-hidden>
+        {icons[toast.type]}
+      </div>
       <div className="flex-1">
         <p className="text-sm font-medium">{toast.message}</p>
         {toast.action && (
           <button
             onClick={toast.action.onClick}
-            className="text-xs font-semibold mt-1 hover:opacity-75"
+            className="text-xs font-semibold mt-1 text-primary-600 hover:underline focus:outline-none"
           >
             {toast.action.label}
           </button>
@@ -162,7 +221,8 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
       </div>
       <button
         onClick={handleClose}
-        className="flex-shrink-0 text-lg hover:opacity-75 transition-opacity"
+        aria-label="Close notification"
+        className="flex-shrink-0 text-lg hover:opacity-75 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-1 rounded"
       >
         ×
       </button>
