@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Button from "../components/Button";
 // LayoutWrapper is provided by App.tsx; pages should render content only.
 import MintForm, { MintFormData } from "../components/MintForm";
 import FileUploader from "../components/FileUploader";
@@ -132,7 +133,7 @@ const MintCredits: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <main role="main" className="space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -201,28 +202,21 @@ const MintCredits: React.FC = () => {
             {/* Live Preview Summary */}
             {formData && (
               <div className="p-4 rounded-lg border border-border bg-white text-foreground">
-                <h4 className="font-semibold mb-2">Preview Summary</h4>
-                <div className="text-sm text-muted-foreground space-y-1">
-                  <p>
-                    <span className="font-medium">Org:</span> {formData.organizationName || "—"}
-                  </p>
-                  <p>
-                    <span className="font-medium">Amount:</span> {formData.creditAmount} MT
-                  </p>
-                  <p>
-                    <span className="font-medium">Type:</span> {formData.certificateType}
-                  </p>
-                  <p>
-                    <span className="font-medium">Issue Date:</span> {formData.issueDate}
-                  </p>
-                </div>
-                <div className="mt-3">
-                  <button
-                    onClick={() => setIsPreviewOpen(true)}
-                    className="text-sm text-primary underline"
-                  >
-                    Open full preview
-                  </button>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-semibold mb-2">Preview Summary</h4>
+                    <div className="text-sm text-muted-foreground space-y-1">
+                      <p><span className="font-medium">Org:</span> {formData.organizationName || "—"}</p>
+                      <p><span className="font-medium">Amount:</span> {formData.creditAmount} MT</p>
+                      <p><span className="font-medium">Type:</span> {formData.certificateType}</p>
+                      <p><span className="font-medium">Issue Date:</span> {formData.issueDate}</p>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    <Button variant="ghost" size="sm" onClick={() => setIsPreviewOpen(true)} className="mb-2">Open full preview</Button>
+                    <br />
+                    <Button variant="outline" size="sm" onClick={() => { setFormData(null); setCertificateFile(null); }}>Reset</Button>
+                  </div>
                 </div>
               </div>
             )}
@@ -261,7 +255,7 @@ const MintCredits: React.FC = () => {
         message={transactionData.message}
         onClose={handleTransactionModalClose}
       />
-    </div>
+    </main>
   );
 };
 
