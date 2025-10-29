@@ -6,6 +6,7 @@ import TransactionStatus from "../components/TransactionStatus";
 import { useToast } from "../components/ToastNotification";
 import { transferNFT } from "../utils/algorand";
 import { useWallet } from "../context/WalletContext";
+import Button from "../components/Button";
 
 type TransactionState = "pending" | "success" | "failed";
 
@@ -90,72 +91,68 @@ const TradeCredits: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-        {/* Page Header */}
+    <main role="main" className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Trade Credits
-          </h1>
-          <p className="text-muted-foreground">
-            Transfer your carbon credit NFTs to other Algorand addresses
-          </p>
+          <h1 className="text-3xl font-bold text-foreground mb-1">Trade Credits</h1>
+          <p className="text-muted-foreground">Transfer your carbon credit NFTs to other Algorand addresses</p>
+          <div className="mt-3 text-sm text-muted-foreground">Fast, low-fee settlements — verify recipient address before transfer.</div>
         </div>
 
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm">
-            <h4 className="font-semibold mb-1">💼 Peer-to-Peer Trading</h4>
-            <p className="text-xs">
-              Transfer credits directly to any Algorand wallet address
-            </p>
-          </div>
-          <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-green-900 text-sm">
-            <h4 className="font-semibold mb-1">⚡ Instant Settlement</h4>
-            <p className="text-xs">
-              Transactions are confirmed immediately on the blockchain
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={() => window.location.href = '/credits'}>My Credits</Button>
+          <Button variant="primary" size="sm" onClick={() => window.location.href = '/mint'}>Mint</Button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Form */}
-          <div className="lg:col-span-2">
-            <div className="p-6 rounded-lg border border-border bg-card text-card-foreground">
-              <TradeForm
-                onSubmit={handleFormSubmit}
-                isLoading={isSubmitting}
-                availableAmount={100}
-              />
+      {/* Info + Form */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm">
+              <h4 className="font-semibold mb-1">💼 Peer-to-Peer Trading</h4>
+              <p className="text-xs">Transfer credits directly to any Algorand wallet address</p>
+            </div>
+            <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-green-900 text-sm">
+              <h4 className="font-semibold mb-1">⚡ Instant Settlement</h4>
+              <p className="text-xs">Transactions confirm quickly on Algorand with low fees</p>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Important Notice */}
-            <div className="p-6 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900">
-              <h3 className="font-semibold mb-3">⚠️ Important</h3>
-              <ul className="text-xs space-y-2">
-                <li>✓ Double-check recipient address</li>
-                <li>✓ Transactions cannot be reversed</li>
-                <li>✓ Ensure address exists on Algorand</li>
-                <li>✓ Include optional message for recipient</li>
-              </ul>
-            </div>
-
-            {/* Address Format Info */}
-            <div className="p-6 rounded-lg border border-border bg-muted/50">
-              <h3 className="font-semibold text-foreground mb-3">
-                Address Format
-              </h3>
-              <p className="text-xs text-muted-foreground mb-3">
-                Algorand addresses are 58 characters long:
-              </p>
-              <code className="block text-xs font-mono bg-background p-2 rounded border border-border text-foreground break-all">
-                AAAAAAAAAAAAAAAAA...AAAAAAY5HVY
-              </code>
-            </div>
+          <div className="p-6 rounded-lg border border-border bg-card text-card-foreground">
+            <TradeForm onSubmit={handleFormSubmit} isLoading={isSubmitting} availableAmount={100} />
           </div>
         </div>
+
+        {/* Sidebar */}
+        <aside className="space-y-6">
+          <div className="p-6 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900">
+            <h3 className="font-semibold mb-3">⚠️ Important</h3>
+            <ul className="text-xs space-y-2">
+              <li>✓ Double-check recipient address</li>
+              <li>✓ Transactions cannot be reversed</li>
+              <li>✓ Ensure recipient wallet exists on Algorand</li>
+            </ul>
+          </div>
+
+          <div className="p-6 rounded-lg border border-border bg-muted/50">
+            <h3 className="font-semibold text-foreground mb-2">Address Format</h3>
+            <p className="text-xs text-muted-foreground mb-2">Algorand addresses are base32 strings — paste the full address below.</p>
+            <code className="block text-xs font-mono bg-background p-2 rounded border border-border text-foreground break-all">AAAAAAAAAAAAAAAAA...AAAAAAY5HVY</code>
+          </div>
+
+          <div className="p-4 rounded-lg border border-border bg-card text-card-foreground">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div>
+                <div className="text-xs">Estimated Fee</div>
+                <div className="font-medium">0.001 ALGO</div>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => window.open('https://algorand.org', '_blank')}>Learn more</Button>
+            </div>
+          </div>
+        </aside>
+      </div>
 
       {/* Confirmation Modal */}
       {formData && (
@@ -178,7 +175,7 @@ const TradeCredits: React.FC = () => {
         message={transactionData.message}
         onClose={handleTransactionClose}
       />
-    </div>
+    </main>
   );
 };
 
