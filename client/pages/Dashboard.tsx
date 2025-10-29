@@ -117,7 +117,7 @@ const Dashboard: React.FC = () => {
             <p className="mt-2 text-sm text-muted-foreground">{isConnected ? `${balance} ALGO` : "Not connected"}</p>
             <div className="mt-4">
               <Link to="/profile">
-                <Button variant="outline" className="w-full">Profile</Button>
+                <Button variant="ghost" className="w-full">Profile</Button>
               </Link>
             </div>
           </div>
