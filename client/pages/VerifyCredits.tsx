@@ -5,6 +5,7 @@ import VerificationResult from "../components/VerificationResult";
 import Loader from "../components/Loader";
 import { useToast } from "../components/ToastNotification";
 import { verifyNFT } from "../utils/algorand";
+import Button from "../components/Button";
 
 const VerifyCredits: React.FC = () => {
   const { addToast } = useToast();
@@ -44,109 +45,62 @@ const VerifyCredits: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-        {/* Page Header */}
+    <main role="main" className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Verify Credits
-          </h1>
-          <p className="text-muted-foreground">
-            Verify the authenticity of carbon credit NFTs on the Algorand
-            blockchain
-          </p>
+          <h1 className="text-3xl font-bold text-foreground mb-1">Verify Credits</h1>
+          <p className="text-muted-foreground">Verify the authenticity of carbon credit NFTs on the Algorand blockchain</p>
+          <div className="mt-3 text-sm text-muted-foreground">Enter an Asset ID to fetch on-chain registration and metadata from IPFS.</div>
         </div>
 
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm">
-            <h4 className="font-semibold mb-1">✓ Blockchain Verified</h4>
-            <p className="text-xs">
-              Check if an NFT is authentic and registered on Algorand
-            </p>
-          </div>
-          <div className="p-4 rounded-lg bg-green-50 border border-green-200 text-green-900 text-sm">
-            <h4 className="font-semibold mb-1">📦 Metadata Verified</h4>
-            <p className="text-xs">
-              View complete metadata stored on IPFS for transparency
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={handleReset}>Reset</Button>
+          <Button variant="primary" size="sm" onClick={() => window.location.href = '/help'}>How verification works</Button>
         </div>
+      </div>
 
-        {isVerifying ? (
-          <Loader size="lg" message="Verifying NFT..." fullScreen={false} />
-        ) : verificationData ? (
-          <VerificationResult
-            data={verificationData}
-            assetId={currentAssetId}
-            onReset={handleReset}
-          />
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Form */}
-            <div className="lg:col-span-2">
-              <div className="p-6 rounded-lg border border-border bg-card text-card-foreground">
-                <VerifyForm onSubmit={handleVerify} isLoading={isVerifying} />
-              </div>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* FAQ */}
-              <div className="p-6 rounded-lg border border-border bg-muted/50">
-                <h3 className="font-semibold text-foreground mb-4">
-                  Verification Process
-                </h3>
-                <div className="space-y-4 text-sm">
-                  <div>
-                    <p className="font-medium text-foreground mb-1">
-                      1. Enter Asset ID
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Paste the Algorand asset ID you want to verify
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground mb-1">
-                      2. Blockchain Check
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      We verify the asset exists on Algorand
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground mb-1">
-                      3. Metadata Retrieval
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      View complete metadata from IPFS
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground mb-1">
-                      4. Results Display
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      See all details and verification status
-                    </p>
-                  </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <div className="p-6 rounded-lg border border-border bg-card text-card-foreground">
+            {isVerifying ? (
+              <Loader size="lg" message="Verifying NFT..." fullScreen={false} />
+            ) : verificationData ? (
+              <div className="space-y-4">
+                <VerificationResult data={verificationData} assetId={currentAssetId} onReset={handleReset} />
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" onClick={() => navigator.clipboard?.writeText(currentAssetId || '')}>Copy Asset ID</Button>
+                  <Button variant="outline" size="sm" onClick={() => window.open(`https://algoexplorer.io/asset/${currentAssetId}`, '_blank')}>Open in Explorer</Button>
                 </div>
               </div>
-
-              {/* Benefits */}
-              <div className="p-6 rounded-lg bg-green-50 border border-green-200 text-green-900">
-                <h3 className="font-semibold mb-3">✓ Why Verify?</h3>
-                <ul className="text-xs space-y-2">
-                  <li>✓ Ensure authenticity</li>
-                  <li>✓ Check creator details</li>
-                  <li>✓ View project information</li>
-                  <li>✓ Verify metadata integrity</li>
-                  <li>✓ Confirm blockchain registration</li>
-                </ul>
-              </div>
-            </div>
+            ) : (
+              <VerifyForm onSubmit={handleVerify} isLoading={isVerifying} />
+            )}
           </div>
-        )}
+        </div>
+
+        <aside className="space-y-6">
+          <div className="p-6 rounded-lg border border-border bg-muted/50">
+            <h3 className="font-semibold text-foreground mb-3">How it works</h3>
+            <ol className="text-sm list-decimal list-inside space-y-2 text-muted-foreground">
+              <li>Enter the Algorand asset ID</li>
+              <li>We check on-chain registration</li>
+              <li>We fetch metadata from IPFS (if present)</li>
+              <li>Results show creator and timestamp</li>
+            </ol>
+          </div>
+
+          <div className="p-6 rounded-lg bg-green-50 border border-green-200 text-green-900">
+            <h3 className="font-semibold mb-3">Why verify?</h3>
+            <ul className="text-xs space-y-2">
+              <li>✓ Ensure authenticity</li>
+              <li>✓ View creator and metadata</li>
+              <li>✓ Confirm IPFS-hosted details</li>
+            </ul>
+          </div>
+        </aside>
       </div>
+    </main>
   );
 };
 
