@@ -37,6 +37,41 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
 
+  // Focus trap and keyboard handling
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const root = document.getElementById("modal-root") || document.body;
+    const focusable = root.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onClose();
+      }
+      if (e.key === "Tab") {
+        // simple trap: keep focus inside modal
+        const elements = Array.from(focusable).filter(Boolean) as HTMLElement[];
+        if (elements.length === 0) return;
+        const idx = elements.indexOf(document.activeElement as HTMLElement);
+        if (e.shiftKey && idx === 0) {
+          e.preventDefault();
+          elements[elements.length - 1].focus();
+        } else if (!e.shiftKey && idx === elements.length - 1) {
+          e.preventDefault();
+          elements[0].focus();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", onKey);
+    // focus the first focusable item in the modal
+    setTimeout(() => first?.focus(), 0);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
