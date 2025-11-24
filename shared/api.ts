@@ -9,4 +9,13 @@
  */
 export interface DemoResponse {
   message: string;
+  /** ISO timestamp when the response was generated */
+  timestamp?: string;
+  /** Optional echoed value from a query param */
+  echo?: string;
+}
+
+export enum ApiStatus {
+  OK = "ok",
+  ERROR = "error",
 }
