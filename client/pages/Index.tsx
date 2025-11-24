@@ -2,9 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
 
+// Simple formatter used in the sidebar snapshot
+function formatLargeNumber(n: number) {
+  return n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
+}
+
 export default function Index() {
+  const totalCredits = 24512;
+  const activeProjects = 86;
+
   return (
-  <main role="main" className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <main role="main" className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Large hero with prominent CTA and feature highlights */}
       <section className="max-w-7xl mx-auto px-6 pt-16 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -26,6 +34,13 @@ export default function Index() {
               <Link to="/projects" className="ml-2 text-sm text-muted-foreground hover:underline">Browse Projects</Link>
             </div>
 
+            <div className="mt-4 text-sm text-muted-foreground">Quick links:</div>
+            <div className="mt-2 flex gap-2 flex-wrap">
+              <Link to="/verify" className="text-xs px-3 py-1 rounded bg-muted/50">Verify Credits</Link>
+              <Link to="/trade" className="text-xs px-3 py-1 rounded bg-muted/50">Trade</Link>
+              <Link to="/my-credits" className="text-xs px-3 py-1 rounded bg-muted/50">My Credits</Link>
+            </div>
+
             <div className="mt-6 flex items-center gap-3">
               <label htmlFor="project-search" className="sr-only">Search projects</label>
               <input id="project-search" type="search" placeholder="Search projects or assets (e.g. SolarFarm)" className="w-full sm:w-80 px-3 py-2 border rounded-md" aria-label="Search projects" />
@@ -38,6 +53,12 @@ export default function Index() {
                 <p className="text-sm text-muted-foreground mt-1">Algorand allows cheap, fast transactions for on-chain provenance.</p>
               </div>
               <div className="p-4 bg-card rounded-lg">
+                          <div className="mt-4 text-sm text-muted-foreground">Quick links:</div>
+                          <div className="mt-2 flex gap-2 flex-wrap">
+                            <Link to="/verify" className="text-xs px-3 py-1 rounded bg-muted/50">Verify Credits</Link>
+                            <Link to="/trade" className="text-xs px-3 py-1 rounded bg-muted/50">Trade</Link>
+                            <Link to="/my-credits" className="text-xs px-3 py-1 rounded bg-muted/50">My Credits</Link>
+                          </div>
                 <h4 className="font-semibold">Verified Metadata</h4>
                 <p className="text-sm text-muted-foreground mt-1">Attach proofs and IPFS metadata to every credit.</p>
               </div>
@@ -63,11 +84,12 @@ export default function Index() {
             <div className="mt-4 grid grid-cols-2 gap-4">
               <div className="p-4 bg-card rounded">
                 <div className="text-xs text-muted-foreground">Total Credits</div>
-                <div className="text-2xl font-bold mt-1">24,512</div>
+                <div className="text-2xl font-bold mt-1">{formatLargeNumber(totalCredits)}</div>
+                <div className="text-xs text-muted-foreground">Exact: {totalCredits.toLocaleString()}</div>
               </div>
               <div className="p-4 bg-card rounded">
                 <div className="text-xs text-muted-foreground">Active Projects</div>
-                <div className="text-2xl font-bold mt-1">86</div>
+                <div className="text-2xl font-bold mt-1">{activeProjects}</div>
               </div>
             </div>
 
@@ -79,7 +101,6 @@ export default function Index() {
                 <li>✅ Verified metadata published for Asset 1001</li>
               </ul>
             </div>
-
             <div className="mt-4 text-center">
               <Link to="/pricing">
                 <Button variant="ghost">See pricing</Button>
