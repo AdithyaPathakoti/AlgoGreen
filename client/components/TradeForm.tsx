@@ -28,6 +28,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof TradeFormData, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   const validateForm = (): boolean => {
   const newErrors: Partial<Record<keyof TradeFormData, string>> = {};
@@ -54,10 +55,15 @@ const TradeForm: React.FC<TradeFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      if (submitting) return; // prevent double submits
+      setSubmitting(true);
       try {
         await onSubmit(formData);
       } catch (error) {
         console.error("Form submission error:", error);
+        setErrors((prev) => ({ ...prev, message: "Submission failed" } as any));
+      } finally {
+        setSubmitting(false);
       }
     }
   };
@@ -139,8 +145,9 @@ const TradeForm: React.FC<TradeFormProps> = ({
         <Button
           type="submit"
           variant="primary"
-          isLoading={isLoading}
-          disabled={isLoading}
+          isLoading={isLoading || submitting}
+          loadingText={submitting ? "Transferring…" : undefined}
+          disabled={isLoading || submitting}
           className="w-full sm:w-auto"
         >
           Transfer Credits
