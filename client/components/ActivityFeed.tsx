@@ -25,9 +25,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
   compact = false,
   onActivityClick,
 }) => {
-  const getActivityIcon = (
-    type: ActivityItem["type"]
-  ): React.ReactNode => {
+  const getActivityIcon = (type: ActivityItem["type"]): React.ReactNode => {
     const iconMap = {
       mint: "🔨",
       transfer: "📤",
@@ -49,9 +47,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
     return colorMap[status];
   };
 
-  const getStatusBgColor = (
-    status: ActivityItem["status"]
-  ): string => {
+  const getStatusBgColor = (status: ActivityItem["status"]): string => {
     const bgColorMap = {
       success: "bg-green-100",
       pending: "bg-yellow-100",
@@ -77,8 +73,12 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
   if (activities.length === 0) {
     return (
-      <div className={`${compact ? "p-3" : "p-6"} rounded-lg border border-border bg-card text-card-foreground text-center`}>
-        <p className="text-muted-foreground">No activities yet</p>
+      <div
+        className={`${compact ? "p-3" : "p-6"} rounded-lg border border-border bg-card text-card-foreground text-center`}
+        role="status"
+        aria-live="polite"
+      >
+        <p className="text-muted-foreground">No activities yet — connect a wallet or explore projects to get started.</p>
       </div>
     );
   }
@@ -90,11 +90,18 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
         {activities.map((activity) => (
           <div
             key={activity.id}
+            role={onActivityClick ? "button" : undefined}
+            tabIndex={onActivityClick ? 0 : undefined}
+            onKeyDown={(e) => {
+              if (onActivityClick && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                onActivityClick(activity);
+              }
+            }}
             onClick={() => onActivityClick?.(activity)}
+            aria-label={`${activity.title} — ${activity.status}`}
             className={` ${compact ? "p-3" : "p-4"} rounded-lg border border-border/50 flex items-start gap-4 transition-all duration-200 ${
-              onActivityClick
-                ? "cursor-pointer hover:border-primary/50 hover:shadow-md"
-                : ""
+              onActivityClick ? "cursor-pointer hover:border-primary/50 hover:shadow-md" : ""
             }`}
           >
             {/* Icon */}
@@ -115,10 +122,10 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
                     </p>
                   )}
                 </div>
-                {activity.amount && (
-                  <div className="text-right flex-shrink-0">
+                {typeof activity.amount === "number" && (
+                  <div className="text-right flex-shrink-0" aria-hidden>
                     <p className="font-semibold text-foreground">
-                      +{activity.amount}
+                      +{activity.amount.toLocaleString()}
                     </p>
                     <p className="text-xs text-muted-foreground">credits</p>
                   </div>
